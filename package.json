@@ -9,15 +9,26 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:vsext-jsonvalidation.validateJson"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "vsext-jsonvalidation.helloWorld",
-        "title": "Hello World"
+        "command": "vsext-jsonvalidation.validateJson",
+        "title": "SiFive Test"
       }
-    ]
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "vsext-jsonvalidation.validateJson",
+          "when": "resourceExtname == .json || resourceExtname == .json5",
+          "group": "navigation"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
