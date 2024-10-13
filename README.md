@@ -1,71 +1,152 @@
-# vsext-jsonvalidation README
+# vsext-jsonvalidation
 
-This is the README for your extension "vsext-jsonvalidation". After writing up a brief description, we recommend including the following sections.
+The `vsext-jsonvalidation` extension is designed to validate JSON and JSON5 files in Visual Studio Code, ensuring proper formatting, schema validation, and detecting any overlaps in address ranges.
+
+![Demo Preview](./demo.gif)
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- **JSON Validation**: Automatically checks if the JSON file is valid when you run the "SiFive Test" command.
+- **Schema Validation**: Verifies that the JSON objects have required fields: `baseAddress`, `protocol`, `sizeBytes`, and `widthBits`.
+- **Overlap Detection**: Detects overlaps in address ranges between different ports within a JSON object.
 
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+You can access these features by right-clicking on a JSON or JSON5 file in the editor and selecting the "SiFive Test" option from the context menu.
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+This extension requires the following dependencies:
 
-## Extension Settings
+- **Visual Studio Code** version 1.94.0 or later
+- **Node.js** version 14.x or later
+- **TypeScript** version 4.7.4 or later
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+Install these dependencies before running or testing the extension.
 
-For example:
+## Installation and Setup
 
-This extension contributes the following settings:
+1. **Clone the repository** or download the extension.
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+3. **Compile the extension**:
+   ```bash
+   npm run compile
+   ```
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+## How to Run the Extension
+
+To run the extension in Visual Studio Code:
+
+1. Open the project in VS Code.
+2. Press `F5` to launch the extension in a new VS Code window.
+3. Open any `.json` or `.json5` file.
+4. Right-click and choose **SiFive Test** from the context menu. This will trigger JSON validation, schema checking, and overlap detection.
+
+## How to Run the Tests
+
+To run the test suite for the extension, execute:
+
+```bash
+npm test
+```
+
+This will use Mocha to run the tests defined in `extension.test.ts`. The tests include validation of JSON formatting, schema checks, and overlap detection.
+
+## Explanation of the Tests
+
+The test suite includes **unit tests** for the main features of the extension:
+
+- **JSON Validity**: Ensures that the extension detects invalid JSON files.
+- **Schema Validation**: Tests whether the JSON objects follow the required schema with the expected fields.
+- **Overlap Detection**: Verifies if the extension correctly identifies overlapping address ranges in JSON files.
+
+The tests are located in the `extension.test.ts` file and executed using Mocha, with assertions provided by Node's `assert` module.
+
+## Logic and Architecture
+
+### Main Components
+
+1. **`activate` Function**: Registers the command `vsext-jsonvalidation.validateJson` that validates JSON files. The command is triggered by right-clicking in the editor context on JSON or JSON5 files.
+2. **`validateSchema` Function**: Validates that the JSON object contains the necessary fields (`baseAddress`, `protocol`, `sizeBytes`, and `widthBits`) for each port.
+
+3. **`checkOverlap` Function**: Detects if any address ranges overlap based on the `baseAddress` and `sizeBytes` fields for each port.
+
+### Command Registration
+
+- The command `vsext-jsonvalidation.validateJson` is registered in `package.json` under `"activationEvents"`, which is triggered when you select the **SiFive Test** option from the context menu.
+
+### Menu Contribution
+
+The extension contributes to the editor's context menu for `.json` and `.json5` files via the `package.json`:
+
+```json
+"contributes": {
+  "commands": [
+    {
+      "command": "vsext-jsonvalidation.validateJson",
+      "title": "SiFive Test"
+    }
+  ],
+  "menus": {
+    "editor/context": [
+      {
+        "command": "vsext-jsonvalidation.validateJson",
+        "when": "resourceExtname == .json || resourceExtname == .json5",
+        "group": "navigation"
+      }
+    ]
+  }
+}
+```
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- The pop-up notifications may truncate longer messages. Consider using an Output Channel for more detailed feedback if this becomes problematic.
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
-
 ### 1.0.0
 
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+- Initial release of `vsext-jsonvalidation`.
+- JSON validation, schema validation, and overlap detection features added.
 
 ---
 
-## Following extension guidelines
+## Future Improvements
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+- **More Robust Error Handling**: Provide more descriptive and user-friendly error messages when validation fails.
+- **Custom Schema Support**: Allow users to define their own schema for validation.
+- **Performance Enhancements**: Improve overlap detection logic for larger JSON files.
+- **Enhanced UX**: Use Output Channel for displaying detailed messages instead of truncating in pop-ups.
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+---
 
-## Working with Markdown
+## For Developers
 
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
+### Working with the Project
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
+- **Compile** the TypeScript code:
 
-## For more information
+  ```bash
+  npm run compile
+  ```
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+- **Watch** for changes and compile automatically:
 
-**Enjoy!**
+  ```bash
+  npm run watch
+  ```
+
+- **Run Tests**:
+  ```bash
+  npm test
+  ```
+
+### Debugging
+
+- Launch the extension in **debug mode** by pressing `F5` in Visual Studio Code. This will open a new VS Code window with the extension loaded.
+
+---
+
+**Enjoy using `vsext-jsonvalidation` for all your JSON validation needs!**
