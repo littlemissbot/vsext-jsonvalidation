@@ -42,10 +42,11 @@ export function activate(context: vscode.ExtensionContext) {
           const overlap = checkOverlap(jsonObject);
           if (overlap) {
             vscode.window.showErrorMessage(
-              `Overlap found in region: ${overlap}`
+              `Overlap found in region: ${overlap}`,
+              "OK"
             );
           } else {
-            vscode.window.showInformationMessage("No overlap found.");
+            vscode.window.showInformationMessage("No overlap found.", "OK");
           }
         } catch (error) {
           vscode.window.showErrorMessage(
@@ -54,7 +55,8 @@ export function activate(context: vscode.ExtensionContext) {
         }
       } else {
         vscode.window.showInformationMessage(
-          "This extension requires a valid JSON file to function correctly."
+          "This extension requires a valid JSON file to function correctly.",
+          "OK"
         );
       }
     }
